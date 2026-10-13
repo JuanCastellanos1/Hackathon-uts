@@ -351,6 +351,5 @@ Se usó **Claude** (Anthropic) como apoyo de programación. Los modelos fueron e
 
 ## 10. Equipo
 
-- Integrante 1
-- Integrante 2
-- Integrante 3
+- Santiago Afanador Arguello
+- Juan Castellanos

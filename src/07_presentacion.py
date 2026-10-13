@@ -240,7 +240,7 @@ def diap_portada(prs, d, numero):
     rectangulo(diap, 0, 3.4, ANCHO, 0.08, NARANJA)
     cuadro_texto(diap, MARGEN + 0.2, 3.9, ANCHO - 1.0, 0.6,
                  ["Hackathon CIAI UTSmart 2026 · Reto Avanzado"], tam=22, color=AZUL, negrita=True)
-    cuadro_texto(diap, MARGEN + 0.2, 4.6, ANCHO - 1.0, 0.6, ["Equipo: [nombres]"], tam=20)
+    cuadro_texto(diap, MARGEN + 0.2, 4.6, ANCHO - 1.0, 0.6, ["Equipo: Santiago Afanador Arguello · Juan Castellanos"], tam=20)
     cuadro_texto(diap, MARGEN + 0.2, 5.4, ANCHO - 1.0, 0.8,
                  [f"Fuentes oficiales: SGC, DANE y UNGRD · {d['n_filas']} municipio-año "
                   f"de {d['n_mpios']} municipios"], tam=18, color=GRIS_LINEA)
