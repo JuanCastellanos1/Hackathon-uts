@@ -217,6 +217,36 @@ Es una aplicación Streamlit que **solo lee los resultados ya calculados**: no e
 
 ---
 
+### 2.13 La fórmula de riesgo y su relación con el agente
+
+**Riesgo = Amenaza × Exposición × Vulnerabilidad.** En el código, la recompensa del agente es:
+
+**Recompensa = Amenaza(t+1) × (0,5 · Exposición + 0,5 · Vulnerabilidad)**
+
+| Variable | Pregunta que responde | Fuente | Cálculo (escala 0 a 1) |
+|---|---|---|---|
+| **Amenaza (t+1)** | ¿Cuánto tembló de verdad el año siguiente? | SGC | Energía de los sismos de magnitud ≥ 2,5 del municipio en t+1, normalizada |
+| **Exposición** | ¿Cuánta gente podría verse afectada? | DANE | log(población), normalizada entre los 87 municipios |
+| **Vulnerabilidad** | ¿Qué tan frágil es el municipio? | UNGRD | Promedio de emergencias por año, movimientos en masa y viviendas afectadas, cada uno normalizado |
+
+**Por qué se multiplica:** si no tiembla, el riesgo es 0 aunque haya mucha gente; si tiembla pero no vive nadie, el riesgo es bajo. Solo hay riesgo alto cuando coinciden el sismo y la gente o la fragilidad.
+
+**Relación con el agente:**
+
+| Variable | ¿La ve al decidir? | Papel |
+|---|---|---|
+| Amenaza (t+1) | **No** (es el futuro) | Solo llega en la recompensa, después de decidir. El agente debe **anticiparla** con P(alto) del supervisado, el grupo del no supervisado, la actividad pasada y la distancia al Nido |
+| Exposición | Sí (población, % rural) | Está en el estado y en la recompensa |
+| Vulnerabilidad | Sí (emergencias, movimientos en masa, viviendas) | Está en el estado y en la recompensa |
+
+Lo que el agente **realmente aprende** es a anticipar dónde habrá amenaza el próximo año y a combinarla con lo que ya sabe.
+
+**El 0,5 + 0,5:** es el peso de la exposición frente a la vulnerabilidad (50/50 en la priorización oficial). En el simulador del decisor es justamente ese peso el que se mueve, y el agente se reentrena para el nuevo objetivo.
+
+> Frase: *"La recompensa es el riesgo que realmente ocurrió: sismicidad del año siguiente por gente expuesta y fragilidad. El agente no ve el futuro; aprende a anticiparlo combinando lo que sí sabe."*
+
+---
+
 ## 3. Decisiones clave y su porqué
 
 | Decisión | Alternativa descartada | Por qué |
