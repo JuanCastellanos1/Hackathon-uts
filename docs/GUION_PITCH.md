@@ -287,6 +287,32 @@ Usar los polígonos del IGAC, la amenaza de la norma NSR-10 (Aa/Av), los daños 
 
 ---
 
+### 5.1 Si preguntan por precisión y resultados: cifras con sus salvedades
+
+**Supervisado (prueba 2020–2024, 880 municipio-año):**
+
+| Métrica | Valor | Salvedad al decirla |
+|---|---|---|
+| Exactitud | **78,2 %** (688 de 880) | No es la métrica principal: decir siempre "bajo" ya acertaría el 67 % sin servir para nada. Por eso reportamos F1-macro |
+| F1-macro | **0,77** (IC 95 %: 0,73–0,81) | Es la métrica principal. La persistencia ("el año que viene será igual") da 0,74 y **cae dentro del intervalo**: le ganamos por poco y no de forma concluyente |
+| Precisión en "alto" | **94,4 %** (34 de 36) | Pocos casos: 36 predicciones "alto" en la prueba |
+| Recall en "alto" | **73,9 %** (34 de 46) | Se escapan 12 casos "alto", que el modelo clasifica como "medio" |
+| Errores graves | **0** | Nunca confunde "bajo" con "alto" en ninguna dirección |
+
+> La exactitud y la precisión en "alto" se calculan de la matriz de confusión (`reports/metricas_supervisado.json`, clave `matriz_confusion`); no están guardadas como campo propio.
+
+**Agente RL (prueba 2020–2024):** captura el **78,6 %** del riesgo máximo (± 2,3 entre semillas) frente al 72,8 % de la mejor fórmula manual y el 25,1 % del azar. Acierta **6 de 10** municipios del top 10 real (precision@10 = 0,61).
+- **Salvedad:** el "riesgo" de la recompensa es un **indicador aproximado** (energía sísmica del año siguiente × exposición × vulnerabilidad), no daños reales. La ventaja sobre la mejor fórmula es **moderada (+5,8 puntos) pero estable**.
+- **Salvedad del simulador:** el agente supera a la fórmula con los mismos pesos en la mayoría de escenarios (por ejemplo 86 % frente a 76 % con 70 % de vulnerabilidad y K = 5), pero **empata** cuando la exposición pesa 80 %, porque la población domina el objetivo y queda poco que anticipar.
+
+**No supervisado:** silueta **0,54** (de −1 a 1; por encima de 0,5 se considera una estructura razonable).
+- **Salvedad:** no hay "acierto" que medir porque no hay etiquetas. La validación es la coherencia geológica: DBSCAN recupera el Nido donde lo ubica la literatura.
+
+**Conclusión para cerrar si piden resumen:**
+"Integramos 4 fuentes oficiales en 35 variables y construimos tres modelos que se complementan. El supervisado anticipa la actividad con 78 % de exactitud y 94 % de precisión en actividad alta, aunque frente a la persistencia la ventaja es pequeña. El no supervisado descubre el Nido sin etiquetas. El agente de refuerzo, en años que nunca vio, captura el 79 % del riesgo máximo, más que cualquier regla manual. No predecimos sismos: le decimos a Santander **dónde mirar primero** con un presupuesto limitado, de forma transparente y reproducible."
+
+---
+
 ## 6. Plan B (si algo falla en vivo)
 
 - **El mapa sale en blanco o sin fondo** (sin internet, Brave con Shields u otro navegador restrictivo):
