@@ -173,6 +173,11 @@ with st.sidebar:
         "- DANE · Proyección de población 2020–2035\n"
         "- UNGRD · Emergencias 2019–2025"
     )
+    st.toggle(
+        "Mapa compatible (sin internet)", key="mapa_compatible",
+        help="Dibuja los mapas sin WebGL ni teselas de internet. Úsalo si el mapa sale en blanco "
+             "(por ejemplo en Brave con Shields activos o sin conexión).",
+    )
 
 
 # ----------------------------------------------------------------- pestaña 1: problema y datos
@@ -368,9 +373,43 @@ def render_supervisado() -> None:
     )
 
 
+# ----------------------------------------------------------------- mapa compatible
+def modo_compatible() -> bool:
+    return bool(st.session_state.get("mapa_compatible", False))
+
+
+def mapa_plano(capas: list[dict], alto: int) -> go.Figure:
+    """Mapa de respaldo en SVG (longitud × latitud): no usa WebGL ni teselas, funciona en
+    cualquier navegador y sin internet."""
+    trazas = []
+    for c in capas:
+        c = dict(c)
+        c["x"], c["y"] = c.pop("lon"), c.pop("lat")
+        trazas.append(go.Scatter(**c))
+    fig = go.Figure(trazas)
+    fig.update_xaxes(title="Longitud", range=[-74.65, -72.35], showgrid=True, gridcolor="#E3ECF4")
+    fig.update_yaxes(title="Latitud", range=[5.65, 8.25], showgrid=True, gridcolor="#E3ECF4",
+                     scaleanchor="x", scaleratio=1)
+    fig.update_layout(height=alto, plot_bgcolor="#F4F8FB")
+    return fig
+
+
 # ----------------------------------------------------------------- pestaña 3: no supervisado
 def figura_mapa_clusters(df: pd.DataFrame) -> go.Figure:
     nido = dict(lat=[config.NIDO_LAT], lon=[config.NIDO_LON])
+    if modo_compatible():
+        capas = [
+            dict(lat=g["lat"].tolist(), lon=g["lon"].tolist(), mode="markers", name=nombre,
+                 marker=dict(size=9, color=PALETA[i % len(PALETA)]),
+                 hovertext=(g["nom_mpio"] + " (" + g["dpto"] + ")").tolist(), hoverinfo="text")
+            for i, (nombre, g) in enumerate(df.groupby("cluster_nombre"))
+        ]
+        capas.append(dict(**nido, mode="markers", marker=dict(size=18, color=COLOR_NIDO, symbol="star"),
+                          name="Nido sísmico de Bucaramanga", hovertext=["Nido sísmico de Bucaramanga"],
+                          hoverinfo="text"))
+        fig = mapa_plano(capas, 560)
+        fig.update_layout(margin=dict(l=0, r=0, t=10, b=0), legend=dict(orientation="h", y=-0.12))
+        return fig
     try:
         fig = px.scatter_map(
             df, lat="lat", lon="lon", color="cluster_nombre", hover_name="nom_mpio",
@@ -599,6 +638,10 @@ def mapa_prioridad(df: pd.DataFrame, k: int) -> go.Figure:
         marker=dict(size=18, color=COLOR_NIDO), name="Nido sísmico de Bucaramanga",
         hovertext=["Nido sísmico de Bucaramanga"], hoverinfo="text",
     ))
+    if modo_compatible():
+        fig = mapa_plano(capas, 580)
+        fig.update_layout(margin=dict(l=0, r=0, t=10, b=0), legend=dict(orientation="h", y=-0.12))
+        return fig
     try:
         fig = go.Figure([go.Scattermap(**c) for c in capas])
         fig.update_layout(map=dict(style="carto-positron", center=CENTRO_SANTANDER, zoom=6.5))
