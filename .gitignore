@@ -7,3 +7,4 @@ data/raw/*.html
 data/raw/sgc_1993_2018_*.xlsx
 *.log
 .DS_Store
+data/interim/

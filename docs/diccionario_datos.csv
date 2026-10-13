@@ -1,0 +1,40 @@
+variable,tipo,unidad,fuente,rol,descripcion,justificacion
+cod_mpio,str(5),–,DANE DIVIPOLA,llave,Código DIVIPOLA de 5 dígitos del municipio,Junto con anio forma la llave única; se lee como texto para conservar el cero inicial.
+nom_mpio,str,–,DANE DIVIPOLA,llave,Nombre oficial del municipio,Permite leer y presentar resultados sin consultar el código.
+dpto,str,–,DANE DIVIPOLA,llave,Departamento al que pertenece el municipio,Permite comparar Santander con los departamentos vecinos.
+anio,int,año,Derivada,llave,Año de observación de la fila,Eje temporal del panel; las particiones de entrenamiento y prueba se hacen por año.
+n_m25,int,sismos,SGC catálogo RSNC,sup,"Sismos del año con magnitud M >= 2,5 y no atípicos",Medida principal de actividad anual; es la base del objetivo y del rezago.
+n_m30,int,sismos,SGC catálogo RSNC,sup,"Sismos del año con magnitud M >= 3,0","Captura la sismicidad más fuerte, menos afectada por la completitud del catálogo."
+n_m35,int,sismos,SGC catálogo RSNC,sup,"Sismos del año con magnitud M >= 3,5","Señal de eventos grandes, los que más importan para el riesgo."
+mag_max,float,M,SGC catálogo RSNC,sup,Magnitud máxima del año (0 si no hubo eventos),Indica el evento más fuerte del año y su potencial de daño.
+mag_media,float,M,SGC catálogo RSNC,sup,Magnitud media del año (0 si no hubo eventos),Resume el nivel típico de magnitud de la actividad anual.
+mag_std,float,M,SGC catálogo RSNC,sup,Desviación estándar de la magnitud del año (0 con menos de dos eventos),Describe la dispersión de magnitudes; sin dos eventos no se puede estimar.
+b_value,float,–,SGC catálogo RSNC,sup,b-value de Aki-MLE en la ventana t−4..t; regional si el municipio tiene menos de 30 eventos,La pendiente de Gutenberg-Richter resume la proporción de sismos grandes frente a pequeños.
+log_energia_j,float,log10 J,SGC catálogo RSNC,sup,Log10 de la energía sísmica liberada en el año (0 si no hubo eventos),La energía pondera los eventos grandes y resume mejor la liberación de tensión que el conteo.
+prof_media_km,float,km,SGC catálogo RSNC,sup,Profundidad media de los hipocentros del año (−1 si no hubo eventos),Separa la sismicidad cortical de la intermedia asociada a la subducción.
+prof_min_km,float,km,SGC catálogo RSNC,sup,Profundidad mínima de los hipocentros del año (−1 si no hubo eventos),"Indica si hubo sismos muy superficiales, los de mayor impacto local."
+pct_superficial,float,0–1,SGC catálogo RSNC,sup,Fracción de sismos del año con profundidad menor a 30 km,"Mide la proporción de sismicidad cortical, la más relevante para zonas urbanas."
+pct_intermedio,float,0–1,SGC catálogo RSNC,sup,Fracción de sismos del año con profundidad entre 70 y 300 km,Mide la actividad del nido sísmico intermedio de Bucaramanga.
+dias_con_sismo,int,días,SGC catálogo RSNC,sup,Número de días distintos con al menos un sismo en el año,Distingue actividad repartida en el año de enjambres concentrados en pocos días.
+rms_medio,float,s,SGC catálogo RSNC,sup,RMS medio de la localización de los sismos del año (−1 si no hubo eventos),Indicador de calidad: residuales altos sugieren localizaciones poco confiables.
+gap_medio,float,grados,SGC catálogo RSNC,sup,GAP azimutal medio de la localización (−1 si no hubo eventos),Cobertura de estaciones; valores altos indican una geometría de localización pobre.
+err_prof_medio,float,km,SGC catálogo RSNC,sup,Error medio de la profundidad (−1 si no hubo eventos),"Incertidumbre de la profundidad, necesaria para interpretar pct_superficial."
+fases_medias,float,–,SGC catálogo RSNC,sup,Número medio de fases usadas en la localización (−1 si no hubo eventos),"Cantidad de lecturas por evento, otra medida de calidad de la localización."
+sin_eventos,int,0/1,Derivada,sup,"1 si el año no tuvo sismos con M >= 2,5",Marca explícita de ausencia de actividad; muchos municipios tienen años en cero.
+n_m25_prom_3a,float,sismos,Derivada,sup,"Media de n_m25 en los tres años previos (t−1, t−2, t−3)","Memoria reciente de la actividad, construida solo con años anteriores a t."
+tendencia,float,–,Derivada,sup,Cociente n_m25 / (n_m25_prom_3a + 1),Indica si el año está por encima o por debajo de su historia reciente.
+mag_max_historica,float,M,SGC catálogo RSNC,sup,"Máximo de magnitud (M >= 2,5) desde 1993 hasta el año, inclusive","Recoge el mayor evento conocido, que condiciona el riesgo aunque el año esté tranquilo."
+dist_nido_km,float,km,Derivada,sup,Distancia haversine de la cabecera al nido sísmico de Bucaramanga,Mide la cercanía a la fuente sísmica principal de la región.
+lat,float,grados,DANE DIVIPOLA,sup,Latitud de la cabecera municipal,Ubicación geográfica del municipio; junto con lon aporta la posición espacial.
+lon,float,grados,DANE DIVIPOLA,sup,Longitud de la cabecera municipal,Ubicación geográfica del municipio; junto con lat aporta la posición espacial.
+periodo_red,int,0/1,Derivada,sup,"1 desde 2018 (catálogo SeisComP3), 0 antes",Controla el cambio de red y de catálogo para que el modelo no lo confunda con actividad real.
+es_santander,int,0/1,DANE DIVIPOLA,territorial,1 si el municipio pertenece a Santander (código de departamento 68),Separa la zona de estudio de los municipios vecinos.
+poblacion_total,int,hab.,DANE proyecciones población 2020,exposicion,Población total del municipio en 2020,Mide cuánta población quedaría expuesta; entra solo al ranking del agente RL.
+pct_rural,float,0–1,DANE proyecciones población 2020,exposicion,Fracción de población rural en 2020,Indica exposición diferenciada entre zonas urbanas y rurales.
+emergencias_prom_anual,float,eventos/año,UNGRD emergencias (datos.gov.co),vulnerabilidad,"Emergencias UNGRD registradas por año, en promedio",Proxy de la vulnerabilidad histórica; fuera del supervisado para evitar fuga temporal.
+mov_masa_total,int,eventos,UNGRD emergencias (datos.gov.co),vulnerabilidad,"Emergencias UNGRD por movimiento en masa, acumuladas",Los movimientos en masa acompañan a la sismicidad fuerte; se usa en la recompensa RL.
+viviendas_afectadas_total,int,viviendas,UNGRD emergencias (datos.gov.co),vulnerabilidad,"Viviendas destruidas más averiadas, acumuladas en UNGRD",Mide el daño material registrado en el territorio.
+personas_afectadas_total,int,personas,UNGRD emergencias (datos.gov.co),vulnerabilidad,"Personas afectadas, acumuladas en UNGRD",Mide el impacto humano registrado en el territorio.
+nivel_actividad_t1,str,–,Derivada,objetivo,"Clase bajo/medio/alto de n_m25 del año siguiente (0, 1–4, ≥5); NaN en 2025",Es la variable a predecir; los umbrales salen de config y definen el riesgo operativo.
+n_m25_t1,float,sismos,Derivada,auxiliar_futuro,n_m25 del año siguiente; NaN en 2025,Permite verificar la clase real del objetivo; nunca es entrada del modelo.
+log_energia_t1,float,log10 J,Derivada,auxiliar_futuro,log_energia_j del año siguiente; NaN en 2025,Es la base de la amenaza en la recompensa del agente RL; nunca es entrada del modelo.
