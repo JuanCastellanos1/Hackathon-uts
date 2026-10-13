@@ -1,0 +1,126 @@
+{
+  "config": {
+    "k": 10,
+    "lr": 0.05,
+    "epocas": 300,
+    "semillas": 10,
+    "anios_train": [
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015
+    ],
+    "anios_test": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ]
+  },
+  "test": {
+    "agente_rl": {
+      "recompensa_media": 3.487672784997753,
+      "std_semillas": 0.02256304260552872,
+      "pct_oraculo": 0.7856115142887902,
+      "precision_at_k": 0.614
+    },
+    "azar": {
+      "recompensa_media": 1.1060646928780649,
+      "pct_oraculo": 0.25070045105087513,
+      "precision_at_k": 0.12200000000000003
+    },
+    "mayor_poblacion": {
+      "recompensa_media": 2.8868056984148933,
+      "pct_oraculo": 0.6483443600234948,
+      "precision_at_k": 0.54
+    },
+    "mayor_actividad_pasada": {
+      "recompensa_media": 2.846862202460774,
+      "pct_oraculo": 0.6475445203482547,
+      "precision_at_k": 0.38
+    },
+    "ranking_supervisado": {
+      "recompensa_media": 2.7316343977195694,
+      "pct_oraculo": 0.6185691946272781,
+      "precision_at_k": 0.34
+    },
+    "indice_pesos_iguales": {
+      "recompensa_media": 3.2437526666845082,
+      "pct_oraculo": 0.7282421835996014,
+      "precision_at_k": 0.5399999999999999
+    },
+    "oraculo": {
+      "recompensa_media": 4.420945295126714
+    }
+  },
+  "pesos_politica": {
+    "p_alto": {
+      "media": 4.0032272486798615,
+      "std": 0.5517949775007321
+    },
+    "p_medio": {
+      "media": -0.3185665405483168,
+      "std": 1.1963194500523242
+    },
+    "n_m25_prom_3a_log": {
+      "media": 0.6254985597882158,
+      "std": 0.7956289595066516
+    },
+    "mag_max_historica": {
+      "media": 1.0667608236106185,
+      "std": 1.1046584175738876
+    },
+    "dist_nido_km": {
+      "media": 2.102299472378257,
+      "std": 0.8592674116675277
+    },
+    "cluster_rl_0": {
+      "media": 0.4666208616523642,
+      "std": 0.8278692471404724
+    },
+    "cluster_rl_1": {
+      "media": -0.1338423734510133,
+      "std": 0.06287982972390911
+    },
+    "cluster_rl_2": {
+      "media": -0.8418000579568943,
+      "std": 0.8603367173957531
+    },
+    "cluster_rl_3": {
+      "media": -0.023567473622825595,
+      "std": 0.6567547733058925
+    },
+    "cluster_rl_4": {
+      "media": 0.4391087066876045,
+      "std": 0.7779003254526041
+    },
+    "log_poblacion": {
+      "media": 3.9238451004969717,
+      "std": 0.5908988622283144
+    },
+    "pct_rural": {
+      "media": 0.6049181043356835,
+      "std": 0.870862411214719
+    },
+    "emergencias_log": {
+      "media": 4.572245325200284,
+      "std": 0.7642093435296777
+    },
+    "mov_masa_log": {
+      "media": 2.887936360382558,
+      "std": 0.9045493318238683
+    },
+    "viviendas_log": {
+      "media": 0.5927364210533839,
+      "std": 0.9287368883354814
+    }
+  },
+  "curva_aprendizaje": "reports/curva_aprendizaje_rl.csv"
+}
