@@ -1,0 +1,9 @@
+* text=auto
+*.bat text eol=crlf
+*.sh text eol=lf
+*.py text eol=lf
+*.pptx binary
+*.xlsx binary
+*.png binary
+*.joblib binary
+*.npz binary

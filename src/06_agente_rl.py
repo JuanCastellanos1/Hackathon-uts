@@ -1,6 +1,6 @@
 """Paso 06: agente de aprendizaje por refuerzo para priorización sísmica (CONTRATOS §6).
 
-Ejecutar desde la raíz del proyecto: .venv/bin/python src/06_agente_rl.py
+Ejecutar desde la raíz del proyecto (con el entorno virtual activado): python src/06_agente_rl.py
 Llama a sismo.evaluacion_rl.ejecutar(), que guarda models/agente_rl.npz,
 reports/metricas_rl.json, reports/curva_aprendizaje_rl.csv, data/processed/priorizacion_2026.csv
 y 4 figuras en reports/figures/.

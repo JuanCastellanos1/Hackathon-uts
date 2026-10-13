@@ -1,6 +1,6 @@
 """Componente no supervisado (T2.2, CONTRATOS §5).
 
-Ejecutar desde la raíz del proyecto: .venv/bin/python src/05_no_supervisado.py
+Ejecutar desde la raíz del proyecto (con el entorno virtual activado): python src/05_no_supervisado.py
 Llama a sismo.no_supervisado.ejecutar(), que guarda data/processed/clusters_municipios.csv,
 reports/metricas_no_supervisado.json y 4 figuras en reports/figures/.
 """

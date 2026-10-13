@@ -254,28 +254,66 @@ Se aplica la política al estado de 2025. Los 87 municipios de Santander tienen 
 
 ## 6. Cómo reproducir
 
-Requisitos: Python 3.12.
+Funciona en **Windows, Linux y macOS**. Requisitos: **Python 3.12** (en Windows, instálalo desde [python.org](https://www.python.org/downloads/) y marca *"Add python.exe to PATH"*) y unos 1,5 GB libres para las dependencias. Los datos crudos oficiales ya vienen en `data/raw/`, así que **no se necesita internet** para regenerar todo (solo para `--descargar` y para el fondo de los mapas en la demo).
 
-```bash
-python -m venv .venv
-.venv/bin/pip install -r requirements.txt
+### Opción rápida: scripts de un clic
 
-# Pipeline completo desde los datos ya descargados (~2 minutos)
-.venv/bin/python run_all.py
+| Paso | Windows (doble clic o en `cmd`) | Linux / macOS |
+|---|---|---|
+| 1. Instalar (solo la primera vez, ~3 min) | `instalar_windows.bat` | `./instalar.sh` |
+| 2. Regenerar todo + pruebas (~2 min) | `ejecutar_todo_windows.bat` | `./ejecutar_todo.sh` |
+| 3. Abrir la demo en el navegador | `demo_windows.bat` | `./demo.sh` |
 
-# Opcional: volver a descargar desde las fuentes oficiales (SGC, DANE, UNGRD)
-.venv/bin/python run_all.py --descargar
+La demo queda en <http://localhost:8501> (se cierra con `Ctrl+C` en la consola).
 
-# Pruebas automáticas
-.venv/bin/pytest -q
+### Opción manual
 
-# Demo en vivo
-.venv/bin/streamlit run app/app.py
+**Windows (PowerShell o cmd):**
+
+```bat
+git clone https://github.com/JuanCastellanos1/Hackathon-uts.git
+cd Hackathon-uts
+py -3.12 -m venv .venv
+.venv\Scripts\activate
+python -m pip install -r requirements.txt
+
+python run_all.py              :: pipeline completo (~2 min)
+python run_all.py --descargar  :: opcional: vuelve a descargar de SGC, DANE y UNGRD
+python -m pytest -q            :: pruebas automáticas
+python -m streamlit run app\app.py   :: demo en vivo
 ```
 
-`run_all.py` ejecuta en orden `src/03_tabla.py`, `04_supervisado.py`, `05_no_supervisado.py`, `06_agente_rl.py` y `07_presentacion.py`. Con `--descargar` ejecuta antes `01_descarga_sgc.py` y `02_descarga_fuentes_complementarias.py`. Al final imprime el tiempo de cada paso.
+> Si PowerShell bloquea `activate` ("la ejecución de scripts está deshabilitada"), usa `cmd` o ejecuta una vez `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`. También puedes no activar y llamar directamente a `.venv\Scripts\python.exe run_all.py`.
 
-Las semillas son fijas (`config.SEMILLA = 42` y 10 semillas para el agente). En la verificación, dos ejecuciones consecutivas dieron los mismos reportes, salvo diferencias de redondeo de punto flotante.
+**Linux / macOS:**
+
+```bash
+git clone https://github.com/JuanCastellanos1/Hackathon-uts.git
+cd Hackathon-uts
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+
+python run_all.py              # pipeline completo (~2 min)
+python run_all.py --descargar  # opcional: vuelve a descargar de las fuentes oficiales
+python -m pytest -q            # pruebas automáticas
+python -m streamlit run app/app.py   # demo en vivo
+```
+
+### Qué hace cada comando
+
+`run_all.py` ejecuta en orden `src/03_tabla.py`, `04_supervisado.py`, `05_no_supervisado.py`, `06_agente_rl.py` y `07_presentacion.py`. Con `--descargar` ejecuta antes `01_descarga_sgc.py` y `02_descarga_fuentes_complementarias.py`. Al final imprime el tiempo de cada paso. Cada script también se puede correr por separado (`python src/06_agente_rl.py`).
+
+Las semillas son fijas (`config.SEMILLA = 42` y 10 semillas para el agente). En la verificación, dos ejecuciones consecutivas, y una tercera en un clon limpio del repositorio, dieron los mismos reportes, salvo diferencias de redondeo de punto flotante (≤ 1e-13).
+
+### Problemas frecuentes
+
+| Síntoma | Solución |
+|---|---|
+| `'python' no se reconoce como un comando` (Windows) | Reinstala Python marcando *Add to PATH*, o usa `py -3.12` en lugar de `python`. |
+| Caracteres raros (`Ã³`) en la consola de Windows | Ejecuta `chcp 65001` antes (los `.bat` ya lo hacen). No afecta a los resultados. |
+| La demo abre pero los mapas salen sin fondo | Falta internet (las teselas vienen de OpenStreetMap). Los datos y figuras igual se muestran. |
+| `pip` falla compilando paquetes | Usa Python 3.12 (hay ruedas precompiladas para todas las dependencias). |
 
 ---
 
@@ -285,6 +323,8 @@ Las semillas son fijas (`config.SEMILLA = 42` y 10 semillas para el agente). En 
 .
 ├── README.md
 ├── run_all.py                    # orquesta el pipeline (03 → 07; --descargar agrega 01 y 02)
+├── instalar_windows.bat, ejecutar_todo_windows.bat, demo_windows.bat   # un clic en Windows
+├── instalar.sh, ejecutar_todo.sh, demo.sh                             # equivalentes Linux/macOS
 ├── requirements.txt
 ├── src/
 │   ├── 01_descarga_sgc.py        # catálogo SGC, dos consultas

@@ -1,6 +1,6 @@
 """Paso 04: modelo supervisado de actividad sísmica (CONTRATOS §6).
 
-Ejecutar desde la raíz del proyecto: .venv/bin/python src/04_supervisado.py
+Ejecutar desde la raíz del proyecto (con el entorno virtual activado): python src/04_supervisado.py
 """
 import sys
 from pathlib import Path

@@ -2,7 +2,13 @@
 
 Este archivo es de SOLO LECTURA para los subagentes; cualquier cambio lo hace el orquestador.
 """
+import sys
 from pathlib import Path
+
+# En Windows la consola puede usar cp1252: se evita que un carácter como → o ≥ tumbe el script.
+for _s in (sys.stdout, sys.stderr):
+    if hasattr(_s, "reconfigure"):
+        _s.reconfigure(errors="replace")
 
 # ----------------------------------------------------------------- rutas
 ROOT = Path(__file__).resolve().parents[2]

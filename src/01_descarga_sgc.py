@@ -29,6 +29,10 @@ from xml.etree import ElementTree as ET
 import pandas as pd
 import requests
 
+for _s in (sys.stdout, sys.stderr):  # consola de Windows (cp1252)
+    if hasattr(_s, "reconfigure"):
+        _s.reconfigure(errors="replace")
+
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data" / "raw"
 RAW.mkdir(parents=True, exist_ok=True)
@@ -154,7 +158,7 @@ def main() -> None:
         "eventos_1993_2018": len(viejo),
         "eventos_2018_hoy": len(nuevo),
     }
-    (RAW / "metadata_descarga_sgc.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False))
+    (RAW / "metadata_descarga_sgc.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(meta, indent=2, ensure_ascii=False))
 
 

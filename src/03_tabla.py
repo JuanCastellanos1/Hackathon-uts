@@ -1,6 +1,6 @@
 """Construye la tabla única municipio × año (T1.3, CONTRATOS §4).
 
-Ejecutar desde la raíz del proyecto: .venv/bin/python src/03_tabla.py
+Ejecutar desde la raíz del proyecto (con el entorno virtual activado): python src/03_tabla.py
 Llama a sismo.features.construir_dataset(), que guarda los artefactos en data/ y docs/.
 """
 import sys

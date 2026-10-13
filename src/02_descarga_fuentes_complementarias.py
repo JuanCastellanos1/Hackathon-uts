@@ -13,11 +13,16 @@ Uso:  python src/02_descarga_fuentes_complementarias.py
 from __future__ import annotations
 
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
 import requests
+
+for _s in (sys.stdout, sys.stderr):  # consola de Windows (cp1252)
+    if hasattr(_s, "reconfigure"):
+        _s.reconfigure(errors="replace")
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data" / "raw"
@@ -52,7 +57,7 @@ def main() -> None:
             meta[nombre]["filas"] = len(pd.read_csv(destino, low_memory=False))
         print(nombre, meta[nombre])
     (RAW / "metadata_fuentes_complementarias.json").write_text(
-        json.dumps(meta, indent=2, ensure_ascii=False))
+        json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 if __name__ == "__main__":

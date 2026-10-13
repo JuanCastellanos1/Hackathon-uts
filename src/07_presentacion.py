@@ -1,6 +1,6 @@
 """Paso 07: genera la presentación del pitch (docs/presentacion.pptx).
 
-Ejecutar desde la raíz del proyecto: .venv/bin/python src/07_presentacion.py
+Ejecutar desde la raíz del proyecto (con el entorno virtual activado): python src/07_presentacion.py
 Todas las cifras y textos con números se leen en tiempo de ejecución de
 reports/*.json, data/processed/*.csv y data/raw/metadata_descarga_sgc.json.
 No hay cifras escritas a mano en este script.
