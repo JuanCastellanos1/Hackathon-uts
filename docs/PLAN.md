@@ -11,7 +11,7 @@
 
 | Verificación | Resultado | Implicación |
 |---|---|---|
-| Catálogo SGC 1993–2018 (Earthworm/SEISAN) | 111.908 eventos (16 duplicados exactos) | OK: se eliminan los duplicados |
+| Catálogo SGC 1993–2018 (Earthworm/SEISAN) | 111.908 eventos (16 duplicados exactos; al unificar ambos catálogos se eliminan 38 repetidos del mismo sismo) | OK: deduplicados |
 | Catálogo SGC 2018–hoy (SeisComP3) | 110.177 eventos, sin duplicados, 99,9 % revisados manualmente | OK |
 | Nulos en fecha, coordenadas, profundidad y magnitud | 0 | OK |
 | Columnas distintas entre consultas | Ml/Mw + depto/municipio **vs.** mag + tipo_mag + región en texto | Unificación al esquema común `t, lat, lon, prof, mag, rms, gap, fases, errores` |
