@@ -21,6 +21,15 @@ from sismo import config  # noqa: E402
 
 st.set_page_config(layout="wide", page_title="Priorización sísmica Santander", page_icon="🌎")
 
+# Estilo visual Windows Vista / Aero Glass (solo apariencia; ver app/estilo_vista.py)
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import estilo_vista  # noqa: E402
+
+TITULO_VENTANA = "Priorización sísmica de Santander — Reto Avanzado"
+estilo_vista.plantilla_plotly()
+estilo_vista.aplicar_estilo(TITULO_VENTANA)
+st.markdown(estilo_vista.barra_titulo(TITULO_VENTANA), unsafe_allow_html=True)
+
 # ----------------------------------------------------------------- rutas y comandos
 RUTA_META_SGC = config.RAW / "metadata_descarga_sgc.json"
 RUTA_META_COMP = config.RAW / "metadata_fuentes_complementarias.json"
@@ -366,7 +375,7 @@ def figura_mapa_clusters(df: pd.DataFrame) -> go.Figure:
         fig = px.scatter_map(
             df, lat="lat", lon="lon", color="cluster_nombre", hover_name="nom_mpio",
             hover_data={"dpto": True, "lat": False, "lon": False, "cluster_nombre": False},
-            color_discrete_sequence=PALETA, map_style="open-street-map",
+            color_discrete_sequence=PALETA, map_style="carto-positron",
             center=CENTRO_SANTANDER, zoom=6.5, height=560,
         )
         fig.add_trace(go.Scattermap(
@@ -592,7 +601,7 @@ def mapa_prioridad(df: pd.DataFrame, k: int) -> go.Figure:
     ))
     try:
         fig = go.Figure([go.Scattermap(**c) for c in capas])
-        fig.update_layout(map=dict(style="open-street-map", center=CENTRO_SANTANDER, zoom=6.5))
+        fig.update_layout(map=dict(style="carto-positron", center=CENTRO_SANTANDER, zoom=6.5))
     except Exception:  # noqa: BLE001 - respaldo si el mapa base no está disponible
         fig = go.Figure([go.Scattergeo(**c) for c in capas])
         fig.update_geos(
@@ -700,14 +709,17 @@ def render_priorizacion() -> None:
 
 
 # ----------------------------------------------------------------- estructura principal
-t1, t2, t3, t4, t5 = st.tabs(["Problema y datos", "Supervisado", "No supervisado", "Agente RL", "Priorización 2026"])
-with t1:
-    render_problema()
-with t2:
-    render_supervisado()
-with t3:
-    render_nosupervisado()
-with t4:
-    render_rl()
-with t5:
-    render_priorizacion()
+# Navegación que solo dibuja la sección activa: con st.tabs los mapas de pestañas ocultas
+# se inicializan con tamaño 0 y quedan en blanco al abrirlas.
+SECCIONES = {
+    "Problema y datos": render_problema,
+    "Supervisado": render_supervisado,
+    "No supervisado": render_nosupervisado,
+    "Agente RL": render_rl,
+    "Priorización 2026": render_priorizacion,
+}
+seccion = st.segmented_control(
+    "Sección", list(SECCIONES), default="Problema y datos", key="seccion",
+    label_visibility="collapsed",
+) or "Problema y datos"
+SECCIONES[seccion]()
