@@ -89,7 +89,11 @@ El agente captura el **78,6 % del riesgo máximo posible**, contra 72,8 % de la 
 
 [Elegir **Bucaramanga**] En cambio Bucaramanga casi no tiene amenaza propia según el modelo, pero entra en el top 3 por **exposición y vulnerabilidad**: 600 mil habitantes e historial de emergencias. Eso es justo lo que queremos: **el agente no prioriza solo dónde tiembla, sino dónde un sismo haría más daño**."
 
-[Si sobra tiempo: pestaña **Agente RL** para mostrar los pesos]
+[Sección **Simulador del decisor**: subir la vulnerabilidad a 70 %, K = 5 y pulsar **Reentrenar agente** (tarda unos 10 s)]
+
+"Y algo que solo permite el aprendizaje por refuerzo: **ustedes ponen las prioridades**. Supongamos que para la Gobernación pesa más la vulnerabilidad y solo hay presupuesto para 5 estudios. [Pulsar] El agente **se reentrena en vivo** con ese objetivo. [Señalar métricas] Sigue superando a una fórmula fija con esos mismos pesos, y aquí vemos qué municipios entran y salen del ranking. **Ustedes definen qué es importante; el agente aprende cómo lograrlo.**"
+
+> Si el tiempo aprieta, se salta el simulador. Si alguien del jurado quiere probarlo, se le deja mover los controles.
 
 ### 9:15 – 10:00 · Diapositiva 10: Impacto, limitaciones y cierre
 
@@ -249,6 +253,9 @@ Es un efecto condicional. La cercanía al Nido ya entra a través de P(alto) y d
 
 **"¿Qué significa 'confianza baja' para 76 municipios?"**
 Que los 10 agentes casi nunca los ponen en su top 10. Con un presupuesto de 10 sobre 87 eso es lo esperado: la confianza dice qué tan seguro es que un municipio **esté** entre los prioritarios.
+
+**"Si el decisor cambia los pesos, ¿no es lo mismo que una fórmula?"**
+No. El decisor no fija los pesos del ranking: fija **su objetivo** (la recompensa). El agente aprende **cómo cumplirlo sin saber dónde temblará**, es decir, aprende a anticipar la amenaza. En el simulador se ve que, con los mismos pesos, el agente supera a la fórmula fija (por ejemplo 86 % frente a 76 % con 70 % de vulnerabilidad y K = 5). En casos extremos (80 % exposición) empatan, porque la población domina y ya no hay mucho que anticipar.
 
 **"¿Cómo integraron las fuentes?"**
 Por el código DIVIPOLA del municipio. Cada sismo se asigna a la cabecera más cercana (coincide en un 95,3 % con el SGC), la población del DANE se cruza por código y las emergencias de la UNGRD por nombre y código (99 % resueltas). Todo queda en una sola tabla de 4.224 filas.

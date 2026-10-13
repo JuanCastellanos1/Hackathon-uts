@@ -751,6 +751,68 @@ def render_priorizacion() -> None:
     )
 
 
+# ----------------------------------------------------------------- simulador del decisor
+@st.cache_data(show_spinner=False, max_entries=32)
+def _simular(peso_exposicion: float, k: int) -> dict:
+    from sismo import evaluacion_rl  # import diferido: solo se carga al usar el simulador
+    return evaluacion_rl.simular_decisor(peso_exposicion=peso_exposicion, k=k)
+
+
+def render_simulador() -> None:
+    st.subheader("Simulador del decisor: el agente se reentrena con sus prioridades")
+    st.markdown(
+        "Usted **define el objetivo** (cuánto le importa la exposición frente a la vulnerabilidad) "
+        "y el **presupuesto**. El agente de refuerzo **aprende en vivo** la política que mejor cumple "
+        "ese objetivo sin ver el futuro, y se compara con una fórmula fija que use esos mismos pesos."
+    )
+    c1, c2 = st.columns(2)
+    peso_vuln = c1.slider("Peso de la vulnerabilidad (emergencias) en el objetivo", 0, 100, 50, 10,
+                          format="%d %%", help="El resto es el peso de la exposición (población).")
+    k = c2.slider("Presupuesto: estudios por año (K)", 5, 20, config.K_PRESUPUESTO, 1)
+    peso_expo = (100 - peso_vuln) / 100.0
+    st.caption(f"Objetivo: riesgo = amenaza(t+1) × ({peso_expo:.0%} exposición + {peso_vuln}% vulnerabilidad)")
+    if not st.button("Reentrenar agente con estas prioridades", type="primary"):
+        st.info("Ajuste los controles y pulse el botón. El entrenamiento tarda unos 5–10 segundos.")
+        return
+    with st.spinner("Entrenando el agente de refuerzo (3 semillas × 150 épocas)..."):
+        r = _simular(peso_expo, k)
+    m1, m2, m3 = st.columns(3)
+    m1.metric("Agente RL · % del óptimo (2020–2024)", f"{r['pct_oraculo_agente']:.1%}",
+              delta=f"{(r['pct_oraculo_agente'] - r['pct_oraculo_indice']) * 100:+.1f} pts vs fórmula")
+    m2.metric("Fórmula fija con los mismos pesos", f"{r['pct_oraculo_indice']:.1%}")
+    m3.metric("Tiempo de entrenamiento", f"{r['tiempo_s']:.1f} s")
+
+    df = r["priorizacion"].sort_values("rango").reset_index(drop=True)
+    pmin, pmax = float(df["puntaje"].min()), float(df["puntaje"].max())
+    df["tamano"] = 7 + 15 * ((df["puntaje"] - pmin) / (pmax - pmin) if pmax > pmin else 0.0)
+    oficial = obtener_csv(config.PRIORIZACION_CSV, CMD_RL, nivel="warning")
+    nuevos = set(df.loc[df["rango"] <= k, "nom_mpio"])
+    if oficial is not None:
+        previos = set(oficial.loc[oficial["rango"] <= k, "nom_mpio"])
+        entran, salen = sorted(nuevos - previos), sorted(previos - nuevos)
+        st.markdown(
+            f"**Frente a la priorización oficial (50/50):** entran {', '.join(entran) or 'ninguno'} · "
+            f"salen {', '.join(salen) or 'ninguno'}."
+        )
+    st.plotly_chart(mapa_prioridad(df, k), width="stretch")
+    st.dataframe(
+        df[df["rango"] <= k][["rango", "nom_mpio", "puntaje", "prob_top_k", "confianza",
+                              "contrib_amenaza", "contrib_exposicion", "contrib_vulnerabilidad"]],
+        hide_index=True, width="stretch",
+        column_config={
+            "rango": st.column_config.NumberColumn("Rango", format="%d"),
+            "nom_mpio": "Municipio",
+            "puntaje": st.column_config.NumberColumn("Puntaje", format="%.2f"),
+            "prob_top_k": st.column_config.ProgressColumn("Prob. en top-K", format="%.2f", min_value=0.0, max_value=1.0),
+            "confianza": "Confianza",
+            "contrib_amenaza": st.column_config.NumberColumn("Contrib. amenaza", format="%.2f"),
+            "contrib_exposicion": st.column_config.NumberColumn("Contrib. exposición", format="%.2f"),
+            "contrib_vulnerabilidad": st.column_config.NumberColumn("Contrib. vulnerabilidad", format="%.2f"),
+        },
+    )
+    st.caption("Versión rápida para la demo (3 agentes en vez de 10). La priorización oficial no cambia.")
+
+
 # ----------------------------------------------------------------- estructura principal
 # Navegación que solo dibuja la sección activa: con st.tabs los mapas de pestañas ocultas
 # se inicializan con tamaño 0 y quedan en blanco al abrirlas.
@@ -760,6 +822,7 @@ SECCIONES = {
     "No supervisado": render_nosupervisado,
     "Agente RL": render_rl,
     "Priorización 2026": render_priorizacion,
+    "Simulador del decisor": render_simulador,
 }
 seccion = st.segmented_control(
     "Sección", list(SECCIONES), default="Problema y datos", key="seccion",

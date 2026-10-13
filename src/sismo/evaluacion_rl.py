@@ -43,7 +43,7 @@ def _minmax(v: np.ndarray) -> np.ndarray:
     return (v - np.nanmin(v)) / rango
 
 
-def construir_estados(df, pred, clusters, anios):
+def construir_estados(df, pred, clusters, anios, peso_exposicion=0.5):
     """Construye estados estandarizados y recompensas de los municipios de Santander.
 
     Devuelve (estados, recompensas, nombres_feat, extra):
@@ -115,7 +115,8 @@ def construir_estados(df, pred, clusters, anios):
             + _minmax(np.log1p(sub["mov_masa_total"].to_numpy(dtype=np.float64)))
             + _minmax(np.log1p(sub["viviendas_afectadas_total"].to_numpy(dtype=np.float64)))
         ) / 3.0
-        recompensas[anio] = amenaza * (0.5 * exposicion + 0.5 * vulnerab)
+        # peso_exposicion lo fija el decisor (0.5 = criterio oficial del proyecto).
+        recompensas[anio] = amenaza * (peso_exposicion * exposicion + (1.0 - peso_exposicion) * vulnerab)
 
     anios_train = [a for a in anios if config.TRAIN_RL[0] <= a <= config.TRAIN_RL[1]]
     if not anios_train:
@@ -255,7 +256,7 @@ def _grupos(nombres_feat):
     return amenaza, exposicion, vulnerabilidad
 
 
-def priorizar(agentes, x_2025, info_mpios, nombres_feat=None):
+def priorizar(agentes, x_2025, info_mpios, nombres_feat=None, k=None):
     """Tabla de priorización 2026 (CONTRATOS §6) con puntaje, confianza y contribuciones.
 
     info_mpios: DataFrame con una fila por municipio, en el mismo orden que x_2025, con
@@ -270,7 +271,7 @@ def priorizar(agentes, x_2025, info_mpios, nombres_feat=None):
         raise ValueError("info_mpios debe tener una fila por municipio de x_2025")
     info = info_mpios.reset_index(drop=True)
     amenaza, exposicion, vulnerabilidad = _grupos(nombres_feat)
-    k = config.K_PRESUPUESTO
+    k = config.K_PRESUPUESTO if k is None else int(k)
 
     puntajes = np.zeros((len(agentes), n))
     contrib = np.zeros((len(agentes), n, 3))
@@ -551,4 +552,56 @@ def ejecutar():
         "pesos": pesos,
         "nombres": nombres,
         "tiempo_s": tiempo,
+    }
+
+
+# ============================================================ simulador del decisor
+def simular_decisor(peso_exposicion=0.5, k=None, semillas=(0, 1, 2), epocas=150):
+    """Reentrena el agente con el objetivo que fija un decisor (para la demo en vivo).
+
+    El decisor no fija los pesos del ranking: fija su objetivo (cuánto pesa la exposición
+    frente a la vulnerabilidad en la recompensa) y el presupuesto K. El agente aprende la
+    política que mejor cumple ese objetivo sin ver el futuro. Versión corta (3 semillas,
+    150 épocas) para que tarde segundos; no modifica los artefactos oficiales.
+    """
+    t0 = time.time()
+    k = config.K_PRESUPUESTO if k is None else int(k)
+    df = pd.read_csv(config.DATASET_CSV, dtype={"cod_mpio": str})
+    pred = pd.read_csv(config.PREDICCIONES_CSV, dtype={"cod_mpio": str})
+    clusters = pd.read_csv(config.CLUSTERS_CSV, dtype={"cod_mpio": str})
+    anios_estado = list(range(config.TRAIN_RL[0], config.ANIO_FIN + 1))
+    estados, recompensas, nombres, extra = construir_estados(
+        df, pred, clusters, anios_estado, peso_exposicion=peso_exposicion)
+    anios_train = list(range(config.TRAIN_RL[0], config.TRAIN_RL[1] + 1))
+    anios_val = list(range(config.VAL_RL[0], config.VAL_RL[1] + 1))
+    anios_test = list(range(config.TEST_RL[0], config.TEST_RL[1] + 1))
+    env = PriorizacionEnv(estados, recompensas, anios=anios_train, k=k)
+
+    agentes, pct = [], []
+    for semilla in semillas:
+        agente = AgentePoliticaLineal(len(nombres), config.RL_LR, config.RL_ENTROPIA, seed=semilla)
+        entrenar(env, agente, epocas, anios_train, anios_val, np.random.default_rng(1000 + semilla))
+        res = evaluar_politica(env, lambda x, m, _a, ag=agente: ag.actuar(x, m, greedy=True), anios_test)
+        pct.append(res["pct_oraculo"])
+        agentes.append(agente)
+
+    # Índice fijo con los mismos pesos del decisor (lo que haría una fórmula).
+    idx = {n: i for i, n in enumerate(nombres)}
+
+    def indice_decisor(x, mascara, _anio):
+        puntaje = (x[:, idx["p_alto"]] + peso_exposicion * x[:, idx["log_poblacion"]]
+                   + (1.0 - peso_exposicion) * x[:, idx["emergencias_log"]])
+        return int(np.argmax(np.where(mascara, puntaje, -np.inf)))
+
+    res_indice = evaluar_politica(env, indice_decisor, anios_test)
+    info = _info_mpios(df, pred, clusters, extra["cod_mpio"], config.ANIO_FIN)
+    priorizacion = priorizar(agentes, estados[config.ANIO_FIN], info, nombres, k=k)
+    return {
+        "priorizacion": priorizacion,
+        "pct_oraculo_agente": float(np.mean(pct)),
+        "std_agente": float(np.std(pct)),
+        "pct_oraculo_indice": float(res_indice["pct_oraculo"]),
+        "k": k,
+        "peso_exposicion": float(peso_exposicion),
+        "tiempo_s": time.time() - t0,
     }

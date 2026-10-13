@@ -128,3 +128,13 @@ def test_priorizar_87_filas_con_rangos_unicos(estados_sinteticos):
     assert sorted(tabla["rango"].tolist()) == list(range(1, N_MUNICIPIOS + 1))
     assert set(tabla["confianza"]) <= {"alta", "media", "baja"}
     assert tabla["prob_top_k"].between(0, 1).all()
+
+
+def test_simulador_decisor_reentrena_con_otros_pesos():
+    """El simulador del decisor entrena rápido y devuelve una priorización completa."""
+    from sismo import evaluacion_rl
+    r = evaluacion_rl.simular_decisor(peso_exposicion=0.3, k=5, semillas=(0,), epocas=20)
+    pri = r["priorizacion"]
+    assert len(pri) == 87 and sorted(pri["rango"]) == list(range(1, 88))
+    assert 0.0 <= r["pct_oraculo_agente"] <= 1.0 and 0.0 <= r["pct_oraculo_indice"] <= 1.0
+    assert r["k"] == 5
