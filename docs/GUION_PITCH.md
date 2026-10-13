@@ -11,7 +11,7 @@ Todas las cifras de este documento salen de `reports/*.json` y de `data/processe
 
 - [ ] La demo abierta en el navegador, en la pestaña **"Priorización 2026"**, y probada con el slider en K = 10.
 - [ ] La presentación abierta en la diapositiva 1.
-- [ ] Probado que haya internet para el fondo de los mapas. Si no hay, se usan las figuras de `reports/figures/` (ver §6, Plan B).
+- [ ] Probado el mapa **en el navegador que se usará**. Si sale en blanco, activar **"Mapa compatible (sin internet)"** en la barra lateral y dejarlo así (ver §6, Plan B).
 - [ ] Una terminal abierta en la carpeta del repo, por si piden ejecutar algo en vivo (`python src/06_agente_rl.py` tarda unos 45 s).
 
 ---
@@ -282,7 +282,11 @@ Usar los polígonos del IGAC, la amenaza de la norma NSR-10 (Aa/Av), los daños 
 
 ## 6. Plan B (si algo falla en vivo)
 
-- **Los mapas no cargan (sin internet):** los datos se siguen mostrando; usar la diapositiva 9 (mapa en PNG) y `reports/figures/rl_mapa_priorizacion.png`.
+- **El mapa sale en blanco o sin fondo** (sin internet, Brave con Shields u otro navegador restrictivo):
+  1. Abrir la barra lateral (`»` arriba a la izquierda) y activar **"Mapa compatible (sin internet)"**. Los mapas se redibujan sin WebGL ni teselas, con los mismos municipios, colores, tamaños y el Nido.
+  2. Frase para el jurado: *"Cambio a la vista compatible, que no depende de internet; los datos son exactamente los mismos."*
+  3. En Brave, otra opción es desactivar los Shields para `localhost` (ícono del león) y recargar.
+  4. Si aun así falla, usar la diapositiva 9 (mapa en PNG) o `reports/figures/rl_mapa_priorizacion.png`.
 - **La demo no arranca:** presentar con las diapositivas 8 y 9. Las figuras están en `reports/figures/`.
 - **Piden ver el código del agente:** abrir `src/sismo/agente_rl.py`, método `actualizar` (la actualización REINFORCE), y `src/sismo/entorno_rl.py`, método `step` (cómo se entrega la recompensa).
 - **Se acaba el tiempo:** saltar la diapositiva 4 (arquitectura) y resumir la 6 en una frase: "el no supervisado encuentra el Nido sin etiquetas".
