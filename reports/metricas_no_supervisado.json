@@ -1,0 +1,212 @@
+{
+  "k_elegido": 5,
+  "seleccion_k": [
+    {
+      "k": 2,
+      "silueta": 0.3870829687511478,
+      "davies_bouldin": 1.1621654652692088,
+      "inercia": 1331.0213964628547,
+      "gmm_bic": 556.3575292846887
+    },
+    {
+      "k": 3,
+      "silueta": 0.4619408640234535,
+      "davies_bouldin": 0.713757662099049,
+      "inercia": 907.1562986144228,
+      "gmm_bic": -3213.5314866375847
+    },
+    {
+      "k": 4,
+      "silueta": 0.5031174022378833,
+      "davies_bouldin": 0.5768959831170319,
+      "inercia": 542.0853795935122,
+      "gmm_bic": -3223.5874280554963
+    },
+    {
+      "k": 5,
+      "silueta": 0.5376176152966425,
+      "davies_bouldin": 0.6804209063060356,
+      "inercia": 342.5906160424159,
+      "gmm_bic": -1696.3816606843504
+    },
+    {
+      "k": 6,
+      "silueta": 0.49204265542112824,
+      "davies_bouldin": 0.7655687360620093,
+      "inercia": 273.9329533406365,
+      "gmm_bic": -2979.7879993768006
+    },
+    {
+      "k": 7,
+      "silueta": 0.4990517014977844,
+      "davies_bouldin": 0.7916500331095984,
+      "inercia": 233.99331578179184,
+      "gmm_bic": -3085.9168705595453
+    },
+    {
+      "k": 8,
+      "silueta": 0.47048552606295,
+      "davies_bouldin": 0.7989567682419132,
+      "inercia": 199.5432093852676,
+      "gmm_bic": -3691.0390837713835
+    }
+  ],
+  "silueta_final": 0.5376176152966425,
+  "centroides": {
+    "Intermedia moderada": {
+      "tasa_m25_anual": 0.5866666666666667,
+      "tasa_m30_anual": 0.1761111111111111,
+      "tasa_m35_anual": 0.06,
+      "mag_max": 3.6426666666666665,
+      "mag_media": 2.861040538154799,
+      "b_value": 0.9407942110796687,
+      "prof_media_km": 121.74721616268893,
+      "pct_superficial": 0.13010782833345483,
+      "pct_intermedio": 0.8538006791715439,
+      "log_energia_anual": 9.170038090085413,
+      "fraccion_anios_activos": 0.35444444444444445
+    },
+    "Baja actividad": {
+      "tasa_m25_anual": 0.0,
+      "tasa_m30_anual": 0.0,
+      "tasa_m35_anual": 0.0,
+      "mag_max": 0.0,
+      "mag_media": 0.0,
+      "b_value": 0.945879252789827,
+      "prof_media_km": 0.0,
+      "pct_superficial": 0.0,
+      "pct_intermedio": 0.0,
+      "log_energia_anual": 0.0,
+      "fraccion_anios_activos": 0.0
+    },
+    "Cortical / superficial": {
+      "tasa_m25_anual": 0.25972222222222224,
+      "tasa_m30_anual": 0.08055555555555555,
+      "tasa_m35_anual": 0.025694444444444443,
+      "mag_max": 3.143333333333333,
+      "mag_media": 2.8359868827160493,
+      "b_value": 0.9428879656914647,
+      "prof_media_km": 14.874665531305114,
+      "pct_superficial": 0.9075606261022927,
+      "pct_intermedio": 0.06567570546737213,
+      "log_energia_anual": 8.346190367089404,
+      "fraccion_anios_activos": 0.17083333333333334
+    },
+    "Intermedia activa (periferia del Nido)": {
+      "tasa_m25_anual": 5.586805555555556,
+      "tasa_m30_anual": 1.451388888888889,
+      "tasa_m35_anual": 0.37152777777777773,
+      "mag_max": 4.291666666666667,
+      "mag_media": 2.82358926010002,
+      "b_value": 1.1815477540024546,
+      "prof_media_km": 107.12409933846118,
+      "pct_superficial": 0.13973907521096687,
+      "pct_intermedio": 0.8034126927654203,
+      "log_energia_anual": 10.324783900777376,
+      "fraccion_anios_activos": 0.8159722222222222
+    },
+    "Nido / sismicidad intermedia": {
+      "tasa_m25_anual": 301.5138888888889,
+      "tasa_m30_anual": 104.8888888888889,
+      "tasa_m35_anual": 36.888888888888886,
+      "mag_max": 5.766666666666667,
+      "mag_media": 2.9295054273255725,
+      "b_value": 0.9097204887343654,
+      "prof_media_km": 146.60627680063797,
+      "pct_superficial": 0.0006490088862391288,
+      "pct_intermedio": 0.9993509911137609,
+      "log_energia_anual": 12.878722666832198,
+      "fraccion_anios_activos": 0.8888888888888888
+    }
+  },
+  "comparacion_territorial": {
+    "ANTIOQUIA": {
+      "Baja actividad": 0,
+      "Cortical / superficial": 1,
+      "Intermedia activa (periferia del Nido)": 2,
+      "Intermedia moderada": 0,
+      "Nido / sismicidad intermedia": 0
+    },
+    "BOLÍVAR": {
+      "Baja actividad": 0,
+      "Cortical / superficial": 1,
+      "Intermedia activa (periferia del Nido)": 2,
+      "Intermedia moderada": 1,
+      "Nido / sismicidad intermedia": 0
+    },
+    "BOYACÁ": {
+      "Baja actividad": 11,
+      "Cortical / superficial": 31,
+      "Intermedia activa (periferia del Nido)": 0,
+      "Intermedia moderada": 8,
+      "Nido / sismicidad intermedia": 0
+    },
+    "CESAR": {
+      "Baja actividad": 0,
+      "Cortical / superficial": 0,
+      "Intermedia activa (periferia del Nido)": 0,
+      "Intermedia moderada": 2,
+      "Nido / sismicidad intermedia": 0
+    },
+    "NORTE DE SANTANDER": {
+      "Baja actividad": 0,
+      "Cortical / superficial": 20,
+      "Intermedia activa (periferia del Nido)": 2,
+      "Intermedia moderada": 8,
+      "Nido / sismicidad intermedia": 0
+    },
+    "SANTANDER": {
+      "Baja actividad": 3,
+      "Cortical / superficial": 7,
+      "Intermedia activa (periferia del Nido)": 18,
+      "Intermedia moderada": 56,
+      "Nido / sismicidad intermedia": 3
+    },
+    "VECINOS (otros dptos)": {
+      "Baja actividad": 11,
+      "Cortical / superficial": 53,
+      "Intermedia activa (periferia del Nido)": 6,
+      "Intermedia moderada": 19,
+      "Nido / sismicidad intermedia": 0
+    }
+  },
+  "importancia_variables": {
+    "pct_superficial": 0.479690606425924,
+    "b_value": 0.25632560888102546,
+    "pct_intermedio": 0.19459390222688588,
+    "log_energia_anual": 0.05257235994637087,
+    "mag_media": 0.011721303574401707,
+    "fraccion_anios_activos": 0.005096218945392052,
+    "tasa_m25_anual": 0.0,
+    "tasa_m35_anual": 0.0,
+    "tasa_m30_anual": 0.0,
+    "prof_media_km": 0.0,
+    "mag_max": 0.0
+  },
+  "dbscan_fuentes": [
+    {
+      "fuente": 1,
+      "n": 7873,
+      "lat": 6.813395147974089,
+      "lon": -73.1086714086117,
+      "prof_media_km": 148.3572996316525,
+      "mag_max": 6.3
+    },
+    {
+      "fuente": 2,
+      "n": 109,
+      "lat": 6.564211009174311,
+      "lon": -73.5117614678899,
+      "prof_media_km": 114.1710091743119,
+      "mag_max": 4.3
+    },
+    {
+      "fuente": 3,
+      "n": 51,
+      "lat": 7.4509411764705895,
+      "lon": -73.18766666666667,
+      "prof_media_km": 133.9035294117647,
+      "mag_max": 4.4
+    }
+  ]
+}
