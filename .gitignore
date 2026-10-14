@@ -9,3 +9,4 @@ data/raw/sgc_1993_2018_*.xlsx
 .DS_Store
 data/interim/
 .claude/
+brag-output*/
